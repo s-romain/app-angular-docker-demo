@@ -1,0 +1,40 @@
+<div class="app-navbar d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px; height: 100vh;">
+    <!-- En-tete navbar -->
+    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+        <span class="fs-4"><i class="bi bi-activity"></i></span>
+    </a>
+    <hr>
+    <!-- Menu -->
+    <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item" *ngFor="let menuItem of menuItems">
+            <a routerLink="{{ menuItem.routerLink }}" class="nav-link text-white"
+                [ngClass]="{ 'active' : menuItem.active }" aria-current="page" (click)="onClick(menuItem.id)">
+                <svg class="bi me-2" width="16" height="16">
+                </svg>
+                {{ menuItem.libelle }}
+                <svg class="bi me-2" width="16" height="16">
+                </svg>
+                <span class="badge bg-secondary">{{ menuItem.badge }}</span>
+            </a>
+        </li>
+    </ul>
+    <hr>
+    <!-- Footer -->
+    <div class="dropdown">
+        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="https://media-exp2.licdn.com/dms/image/C4D03AQF7RXCZRfcGwQ/profile-displayphoto-shrink_800_800/0/1559682875505?e=1661990400&v=beta&t=Ii-asrdfCpKs33BWx2aZJxJITnLjBh7riR_-hopNCWQ"
+                alt="" width="32" height="32" class="rounded-circle me-2">
+            <strong>Sébastien</strong>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+            <li><a class="dropdown-item" href="#">Nouveau projet...</a></li>
+            <li><a class="dropdown-item" href="#">Paramètres</a></li>
+            <li><a class="dropdown-item" href="#">Profil</a></li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="#">Déconnexion</a></li>
+        </ul>
+    </div>
+</div>

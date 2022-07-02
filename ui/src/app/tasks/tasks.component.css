@@ -1,0 +1,19 @@
+.app-tr-saisie td {
+    background-color: white;
+    vertical-align: middle;
+}
+
+.app-table-project {
+    font-size: 0.8em;
+    margin-bottom: 0;
+}
+
+.app-table-project thead,
+.app-table-project thead tr th,
+.app-table-project thead tr th button,
+.app-table-project tbody tr td {
+    margin: 0;
+    padding: 0;
+    padding-left: 0.5rem;
+    padding-right: 0;
+}

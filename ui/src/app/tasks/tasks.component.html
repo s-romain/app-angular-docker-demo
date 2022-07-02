@@ -1,0 +1,90 @@
+<div class="table table-responsive w-100 d-block d-md-table">
+    <table class="table table-dark">
+        <thead>
+            <tr>
+                <th scope="col">Activités</th>
+            </tr>
+        </thead>
+        <tbody class="table-light">
+            <tr *ngFor="let project of $projects | async; let i = index">
+                <td colspan="10">
+                    <table class="app-table-project table table-light">
+                        <thead>
+                            <tr>
+                                <th>
+                                    {{ project.name }}
+                                    <button type="button" class="btn btn-light" (click)="changeVisibility(project)">
+                                        <fa-icon
+                                            [icon]="hiddenProjects.get(project.id) ? faChevronRight : faChevronDown">
+                                        </fa-icon>
+                                    </button>
+                                </th>
+                                <th colspan="9"></th>
+                            </tr>
+                            <tr *ngIf="!hiddenProjects.get(project.id)">
+                                <th scope="col" colspan="2">Activité</th>
+                                <th scope="col" *ngFor="let day of week; let i = index">{{day.day}} {{day.date}}
+                                </th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="!hiddenProjects.get(project.id)">
+                            <tr class="app-tr-saisie" *ngFor="let task of project.tasks; let i = index">
+                                <td class="col-3" colspan="2">
+                                    <span>{{ task.name }}</span>
+                                </td>
+                                <td class="col-1" *ngFor="let day of week; let i = index">
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" maxlength="4" class="form-control" placeholder="0"
+                                            aria-label="Duration" aria-describedby="basic-addon1"
+                                            [disabled]="day.closed">
+                                        <button class="input-group-text" id="basic-addon1" data-bs-toggle="tooltip"
+                                            [disabled]="day.closed" data-bs-placement="top" title="Commenter...">
+                                            <fa-icon [icon]="faPenToSquare"></fa-icon>
+                                        </button>
+                                    </div>
+                                </td>
+                                <td class="col">
+                                    <div class="d-flex flex-row bd-highlight input-group input-group-sm">
+                                        <div class="bd-highlight pr-2">
+                                            <button type="button" class="btn btn-outline-primary"
+                                                data-bs-toggle="tooltip" data-bs-placement="top" title="Commenter...">
+                                                <fa-icon [icon]="faCommentDots"></fa-icon>
+                                            </button>
+                                        </div>
+                                        <div class="bd-highlight px-2">
+                                            <button type="button" class="btn btn-danger" data-bs-toggle="tooltip"
+                                                data-bs-placement="top" title="Supprimer la tâche"
+                                                (click)="deleteActivity(task)">
+                                                <fa-icon [icon]="faTrashAlt"></fa-icon>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Nouvelle activité -->
+                            <tr class="app-tr-saisie" *ngIf="!hiddenProjects.get(project.id)">
+                                <td class="col-3" colspan="2">
+                                    <div class="input-group input-group-sm py-1">
+                                        <input id="input-new-task-{{project.id}}" type="text" class="form-control"
+                                            aria-describedby="basic-addon2" placeholder="Nouvelle activité..."
+                                            aria-label="Duration" />
+                                        <button class="input-group-text" id="basic-addon2" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" title="Ajouter activité"
+                                            (click)="addActivity(project)">
+                                            <fa-icon [icon]="faPlusCircle">
+                                            </fa-icon>
+                                        </button>
+                                    </div>
+                                </td>
+                                <td colspan="8"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

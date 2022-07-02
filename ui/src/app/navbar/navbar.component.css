@@ -1,0 +1,12 @@
+.app-navbar {
+    background-color: rgb(87, 62, 239) !important;
+}
+
+.app-navbar .nav-pills .nav-link.active {
+    background-color: rgb(135, 39, 219) !important;
+}
+
+.app-navbar .dropdown-menu-dark,
+.app-navbar .bg-secondary {
+    background-color: rgb(62, 13, 129) !important;
+}
