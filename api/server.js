@@ -1,4 +1,7 @@
 const express = require('express');
+
+const axios = require('axios');
+
 const app = express(),
     bodyParser = require('body-parser');
 port = 3080;
@@ -10,54 +13,30 @@ app.get('/', (req, res) => {
     res.redirect('http://localhost:4200');
 });
 
-var seqIdTaskNextVal = 3;
-const tasks = [
-    {
-        id: 1,
-        name: 'ACTI-001',
-        title: 'Lorem ipsum',
-        state: 'A_CHIFFRER',
-        idProject: 1
-    },
-    {
-        id: 2,
-        name: 'ACTI-002',
-        title: 'Lorem ipsum',
-        state: 'EN_COURS',
-        idProject: 1
-    }
-];
-
-const projects = [
-    {
-        id: 1,
-        name: 'Projet 1',
-        tasks: [
-            {
-                id: 1,
-                name: 'ACTI-001',
-                title: 'Lorem ipsum',
-                state: 'A_CHIFFRER',
-                idProject: 1
-            },
-            {
-                id: 2,
-                name: 'ACTI-002',
-                title: 'Lorem ipsum',
-                state: 'EN_COURS',
-                idProject: 1
-            }
-        ],
-        visible: true
-    }
-];
-
 /***
  * GET /api/tasks
  */
 app.get('/api/tasks', (req, res) => {
-    console.log('GET /api/tasks')
-    res.json(tasks);
+    console.log('GET /api/tasks');
+
+    axios
+        .get('http://database-api:3000/tasks')
+        .then(result => {
+            console.log(`statusCode: ${result.status}`);
+            const tasks = result.data.map(d => {
+                return {
+                    id: d.id_task,
+                    name: d.name_task,
+                    idProject: d.id_project,
+                    state: 'En cours'
+                };
+            });
+            res.json(tasks);
+        })
+        .catch(error => {
+            console.error(error);
+            res.json([]);
+        });
 });
 
 /***
@@ -65,11 +44,22 @@ app.get('/api/tasks', (req, res) => {
  */
 app.post('/api/tasks', (req, res) => {
     console.log('POST /api/tasks', req.body);
-    let newTask = req.body;
-    newTask.id = seqIdTaskNextVal;
-    projects[0].tasks.push(newTask);
-    seqIdTaskNextVal++;
-    res.json(newTask);
+
+    const newTask = {
+        name_task: req.body.name,
+        id_project: req.body.idProject
+    };
+
+    axios
+        .post('http://database-api:3000/tasks', newTask)
+        .then(result => {
+            console.log(`statusCode: ${result.status}`);
+            res.json(result.data);
+        })
+        .catch(error => {
+            console.error(error);
+            res.json(null);
+        });
 });
 
 /***
@@ -77,24 +67,74 @@ app.post('/api/tasks', (req, res) => {
  */
 app.delete('/api/tasks/:idTask', (req, res) => {
     console.log(`DELETE /api/tasks/${req.params.idTask}`);
-    projects[0].tasks = projects[0].tasks.filter(t => t.id != req.params.idTask);
-    res.json(projects[0].tasks);
+
+    axios
+        .delete(`http://database-api:3000/tasks?id_task=eq.${req.params.idTask}`)
+        .then(result => {
+            console.log(`statusCode: ${result.status}`);
+            res.json(req.params.idTask);
+        })
+        .catch(error => {
+            console.error(error);
+        });
 });
 
 /***
  * GET /api/projects
  */
 app.get('/api/projects', (req, res) => {
-    console.log('GET /api/projects')
-    res.json(projects);
+    console.log('GET /api/projects');
+
+    axios
+        .get('http://database-api:3000/projects?select=*,tasks(*)')
+        .then(result => {
+            console.log(`statusCode: ${result.status}`);
+            const projects = result.data.map(d => {
+                return {
+                    id: d.id_project,
+                    name: d.name_project,
+                    tasks: d.tasks.map(t => {
+                        return {
+                            id: t.id_task,
+                            name: t.name_task,
+                            idProject: t.id_project,
+                        }
+                    }),
+                    visible: true
+                };
+            });
+            res.json(projects);
+        })
+        .catch(error => {
+            console.error(error);
+            res.json([]);
+        });
 });
 
 /***
  * GET /api/projects/:idProject/tasks
  */
 app.get('/api/projects/:idProject/tasks', (req, res) => {
-    console.log(`GET /api/projects/${req.params.idProject}/tasks`)
-    res.json(tasks);
+    console.log(`GET /api/projects/${req.params.idProject}/tasks`);
+
+    axios
+        .get(`http://database-api:3000/tasks?id_project=eq.${req.params.idProject}`)
+        .then(result => {
+            console.log(`statusCode: ${result.status}`);
+            const tasks = result.data.map(d => {
+                return {
+                    id: d.id_task,
+                    name: d.name_task,
+                    idProject: d.id_project,
+                    state: 'En cours'
+                };
+            });
+            res.json(tasks);
+        })
+        .catch(error => {
+            console.error(error);
+            res.json([]);
+        });
 });
 
 app.listen(port, () => {

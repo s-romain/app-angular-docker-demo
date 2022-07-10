@@ -1,27 +1,41 @@
-## Installer l'api
+
+# Déployer avec docker
+
+1. Installer `docker` et `docker-compose` sur votre machine.
+
+2. Chager les images du fichier `docker-compose` avec la commande:
 
 ```
-cd api
-npm install
+docker-compose pull
 ```
 
-## Lancer l'api
+3. Monter les images docker:
 
 ```
-cd api
-npm run dev
+docker-compose up
 ```
 
-## Installer l'ui
+4. Entrer dans le conteneur de la base de données pour executer les scripts de la base.
 
 ```
-cd ui
-npm install
+docker exec -it db bash
 ```
 
-## Lancer l'ui
+5. Se connecter à la base:
 
 ```
-cd api
-npm run start
+psql -d app_db -U app_user
+```
+
+6. Executer les scripts
+```
+\i /usr/src/sql/scripts/schema.sql
+\i /usr/src/sql/scripts/role.sql
+\i /usr/src/sql/scripts/insert.sql
+```
+
+7. Redémarrer docker-compose:
+
+```
+docker-compose restart
 ```
